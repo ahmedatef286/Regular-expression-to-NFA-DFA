@@ -90,15 +90,16 @@ def handleOr(expression): #(a|b)
      global stateCounter
      if not has_numbers(inputString= expression):
           tempContainer = []
+          additionalNodeCounter = 0
+          tempContainer.append( { 'q'+str(stateCounter) :[ ['$' ,'q'+str(stateCounter+1) ]],})
+          tempContainer.append( { 'q'+str(stateCounter+1) :[ [expression[0] ,'q'+str(stateCounter+2) ]],})
+          tempContainer.append( { 'q'+str(stateCounter+2) :[ ['$' ,'q'+str(stateCounter+3) ]],})
           for i in range(0 , len(expression)):
                if(expression[i] == '|'):
-                    tempContainer.append( { 'q'+str(stateCounter) :[ ['$' ,'q'+str(stateCounter+1) ],['$' ,'q'+str(stateCounter+3) ],],
-                            'q'+str(stateCounter+1) : [[expression[i-1] ,'q'+str(stateCounter+2) ]],
-                            'q'+str(stateCounter+3) : [[expression[i+1] ,'q'+str(stateCounter+4) ]],
-                            'q'+str(stateCounter+2) : [['$' ,'q'+str(stateCounter+5) ]],
-                            'q'+str(stateCounter+4) : [['$'  ,'q'+str(stateCounter+5) ]],
-                             })
-                    stateCounter +=5
+                    tempContainer[0]['q'+str(stateCounter)].append(['$' ,'q'+str(stateCounter+4 + additionalNodeCounter) ])
+                    tempContainer.append( { 'q'+str(stateCounter+4 + additionalNodeCounter) :[ [expression[i+1] ,'q'+str(stateCounter+5 + additionalNodeCounter) ]],})
+                    tempContainer.append( { 'q'+str(stateCounter+5+ additionalNodeCounter) :[ ['$' ,'q'+str(stateCounter+3) ]],})
+                    additionalNodeCounter+=2          
           return tempContainer
      
 def handleZeroOrMore(expression): #(a)*
@@ -133,7 +134,7 @@ def handleOneOrMore(expression): #(a)+
 #lesa me7tageen neshoof taree2a ne3mel join beha
 
  # "(a.b|c.b)|((a.b.c|x)*.(m)*)|x.(c)+"
-print(handleOr('a|b|c'))
+print(handleOr('a|b|c|d'))
      
            
            
